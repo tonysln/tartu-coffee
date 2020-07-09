@@ -226,7 +226,7 @@ class App extends Component {
                   type="button"
                   outline
                   size="sm"
-                  className="mt-3 mr-2"
+                  className="mt-3 mr-2 mb-2"
                   onClick={() => {
                     const insertedRawUnsanitizedTotallySafeList = prompt(
                       "Insert list of locations (stringified JSON):"
@@ -249,7 +249,7 @@ class App extends Component {
                   type="button"
                   outline
                   size="sm"
-                  className="mt-3"
+                  className="mt-3 mb-2"
                   color="danger"
                   onClick={() => {
                     localStorage.clear();
@@ -258,6 +258,19 @@ class App extends Component {
                 >
                   Delete All
                 </Button>
+                <br />
+                <span className="text-muted small" style={{ opacity: "0.6" }}>
+                  Created by{" "}
+                  <a
+                    className="text-muted"
+                    style={{ textDecoration: "underline" }}
+                    href="https://github.com/tonysln"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Anton
+                  </a>
+                </span>
               </>
             )}
           </CardBody>
