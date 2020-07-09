@@ -35,6 +35,8 @@ class App extends Component {
     ? JSON.parse(localStorage.getItem("markers"))
     : [];
 
+  // TODO: Add a second page with a list view of all the markers!
+
   newMarkerCreation = (e) => {
     this.setState({
       lat: e.latlng.lat,
@@ -220,7 +222,27 @@ class App extends Component {
               <>
                 <span>Favorite coffee places in Tartu.</span>
                 <br />
-                <Button type="button" outline size="sm" className="mt-3 mr-2">
+                <Button
+                  type="button"
+                  outline
+                  size="sm"
+                  className="mt-3 mr-2"
+                  onClick={() => {
+                    const insertedRawUnsanitizedTotallySafeList = prompt(
+                      "Insert list of locations (stringified JSON):"
+                    );
+
+                    if (insertedRawUnsanitizedTotallySafeList === null) {
+                      return;
+                    }
+
+                    localStorage.setItem(
+                      "markers",
+                      insertedRawUnsanitizedTotallySafeList
+                    );
+                    window.location.replace("/");
+                  }}
+                >
                   Load List
                 </Button>
                 <Button
@@ -229,6 +251,10 @@ class App extends Component {
                   size="sm"
                   className="mt-3"
                   color="danger"
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.replace("/");
+                  }}
                 >
                   Delete All
                 </Button>
