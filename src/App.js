@@ -119,14 +119,6 @@ class App extends Component {
   render() {
     const position = [this.state.lat, this.state.lng];
 
-    const markerItems = this.markers.map((marker) => (
-      <Marker
-        position={marker.position}
-        key={marker.position[0] + marker.position[1]}
-        onClick={(e) => this.locationSelected(e, marker)}
-      ></Marker>
-    ));
-
     return (
       <div>
         <Map
@@ -140,7 +132,13 @@ class App extends Component {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {markerItems}
+          {this.markers.map((marker) => (
+            <Marker
+              position={marker.position}
+              key={marker.position[0] + marker.position[1]}
+              onClick={(e) => this.locationSelected(e, marker)}
+            ></Marker>
+          ))}
           <Marker
             position={position}
             key={position[0] + position[1]}
