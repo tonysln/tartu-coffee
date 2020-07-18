@@ -29,16 +29,40 @@ class App extends Component {
       description: "",
       rating: "",
     },
+    // markers: []
   };
 
   markers = localStorage.getItem("markers")
     ? JSON.parse(localStorage.getItem("markers"))
-    : [];
+    : []
+
+  // componentDidMount() {
+  //   fetch('http://localhost:5000/api/v1/markers/')
+  //     .then(response => response.json())
+  //     .then(data => this.setState({
+  //       lat: 58.380745,
+  //       lng: 26.725872,
+  //       zoom: 15,
+  //       newMarkerOpacity: 0.0,
+  //       activeLocation: {
+  //         title: "Tartu Coffee",
+  //         description: "",
+  //         rating: "",
+  //       },
+  //       addingNewPlace: false,
+  //       newLocation: {
+  //         title: "",
+  //         description: "",
+  //         rating: "",
+  //       },
+  //       markers: data
+  //     }));
+  // }
 
   // TODO: Add a second page with a list view of all the markers!
 
   newMarkerCreation = (e) => {
-    this.setState({
+    this.setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
       zoom: 18,
@@ -54,11 +78,12 @@ class App extends Component {
         description: "",
         rating: "",
       },
-    });
+      markers: prevState.markers
+    }));
   };
 
   locationSelected = (e, marker) => {
-    this.setState({
+    this.setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
       zoom: 18,
@@ -74,7 +99,8 @@ class App extends Component {
         description: "",
         rating: "",
       },
-    });
+      markers: prevState.markers
+    }));
   };
 
   formSubmitted = (e) => {
@@ -97,6 +123,7 @@ class App extends Component {
         description: "",
         rating: "",
       },
+      markers: prevState.markers
     }));
   };
 
@@ -113,6 +140,7 @@ class App extends Component {
         ...prevState.newLocation,
         [name]: value,
       },
+      markers: prevState.markers
     }));
   };
 
@@ -132,8 +160,11 @@ class App extends Component {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+          {/* {this.state.markers.map((marker) => ( */}
           {this.markers.map((marker) => (
             <Marker
+              // position={[marker.latitude, marker.longitude]}
+              // key={marker.latitude + marker.longitude}
               position={marker.position}
               key={marker.position[0] + marker.position[1]}
               onClick={(e) => this.locationSelected(e, marker)}
@@ -165,8 +196,8 @@ class App extends Component {
                   placeholder="New Coffee Place"
                 />
               ) : (
-                this.state.activeLocation.title
-              )}
+                  this.state.activeLocation.title
+                )}
             </h4>
             <hr />
           </CardTitle>
@@ -217,60 +248,60 @@ class App extends Component {
                 <span>{this.state.activeLocation.description}</span>
               </>
             ) : (
-              <>
-                <span>Favorite coffee places in Tartu.</span>
-                <br />
-                <Button
-                  type="button"
-                  outline
-                  size="sm"
-                  className="mt-3 mr-2 mb-2"
-                  onClick={() => {
-                    const insertedRawUnsanitizedTotallySafeList = prompt(
-                      "Insert list of locations (stringified JSON):"
-                    );
+                  <>
+                    <span>Favorite coffee places in Tartu.</span>
+                    <br />
+                    <Button
+                      type="button"
+                      outline
+                      size="sm"
+                      className="mt-3 mr-2 mb-2"
+                      onClick={() => {
+                        const insertedRawUnsanitizedTotallySafeList = prompt(
+                          "Insert list of locations (stringified JSON):"
+                        );
 
-                    if (insertedRawUnsanitizedTotallySafeList === null) {
-                      return;
-                    }
+                        if (insertedRawUnsanitizedTotallySafeList === null) {
+                          return;
+                        }
 
-                    localStorage.setItem(
-                      "markers",
-                      insertedRawUnsanitizedTotallySafeList
-                    );
-                    window.location.replace("/");
-                  }}
-                >
-                  Load List
+                        localStorage.setItem(
+                          "markers",
+                          insertedRawUnsanitizedTotallySafeList
+                        );
+                        window.location.replace("/");
+                      }}
+                    >
+                      Load List
                 </Button>
-                <Button
-                  type="button"
-                  outline
-                  size="sm"
-                  className="mt-3 mb-2"
-                  color="danger"
-                  onClick={() => {
-                    localStorage.clear();
-                    window.location.replace("/");
-                  }}
-                >
-                  Delete All
+                    <Button
+                      type="button"
+                      outline
+                      size="sm"
+                      className="mt-3 mb-2"
+                      color="danger"
+                      onClick={() => {
+                        localStorage.clear();
+                        window.location.replace("/");
+                      }}
+                    >
+                      Delete All
                 </Button>
-                <br />
-                <span className="text-muted small" style={{ opacity: "0.6" }}>
-                  Created by{" "}
-                  <a
-                    className="text-muted"
-                    style={{ textDecoration: "underline" }}
-                    href="https://github.com/tonysln"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Anton
+                    <br />
+                    <span className="text-muted small" style={{ opacity: "0.6" }}>
+                      Created by{" "}
+                      <a
+                        className="text-muted"
+                        style={{ textDecoration: "underline" }}
+                        href="https://github.com/tonysln"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Anton
                   </a>
-                </span>
-              </>
-            )}
+                    </span>
+                  </>
+                )}
           </CardBody>
         </Card>
       </div>
