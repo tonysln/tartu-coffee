@@ -12,22 +12,21 @@ import {
 import "./App.css";
 
 
-function Menu({ state }) {
-    // TODO: Refactor with hooks in parent
+function Menu({ state, setState }) {
     const formSubmitted = (e) => {
         e.preventDefault();
     
-        const newLoc = this.state.newLocation;
-        newLoc.position = [this.state.lat, this.state.lng];
-        this.markers.push(newLoc);
-        localStorage.setItem("markers", JSON.stringify(this.markers));
+        const newLoc = state.newLocation;
+        newLoc.position = [state.lat, state.lng];
+        state.markers.push(newLoc);
+        localStorage.setItem("markers", JSON.stringify(state.markers));
     
-        this.setState((prevState) => ({
+        setState((prevState) => ({
           lat: prevState.lat,
           lng: prevState.lng,
           zoom: 18,
           newMarkerOpacity: 0.0,
-          activeLocation: this.state.newLocation,
+          activeLocation: state.newLocation,
           addingNewPlace: false,
           newLocation: {
             title: "",
@@ -38,10 +37,9 @@ function Menu({ state }) {
         }));
     };
     
-    // TODO: Refactor with hooks in parent
     const valueChanged = (e) => {
         const { name, value } = e.target;
-        this.setState((prevState) => ({
+        setState((prevState) => ({
           lat: prevState.lat,
           lng: prevState.lng,
           zoom: 18,

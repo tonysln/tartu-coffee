@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import Menu from './Menu';
 import "./App.css";
 
 function App() {
-  // TODO: Hooks
-  const state = {
+
+  const [state, setState] = useState({
     lat: 58.380745,
     lng: 26.725872,
     zoom: 15,
@@ -24,10 +24,10 @@ function App() {
     markers: localStorage.getItem("markers")
     ? JSON.parse(localStorage.getItem("markers"))
     : []
-  };
-  
+  });
+
   const newMarkerCreation = (e) => {
-    this.setState((prevState) => ({
+    setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
       zoom: 18,
@@ -48,7 +48,7 @@ function App() {
   };
 
   const locationSelected = (e, marker) => {
-    this.setState((prevState) => ({
+    setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
       zoom: 18,
@@ -97,7 +97,7 @@ function App() {
           className="activeMarker"
         ></Marker>
       </Map>
-      <Menu state={state} />
+      <Menu state={state} setState={setState} />
     </div>
   );
 }
