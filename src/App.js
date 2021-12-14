@@ -1,19 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { Map, TileLayer, Marker } from "react-leaflet";
-import {
-  Card,
-  CardTitle,
-  CardBody,
-  Input,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-} from "reactstrap";
+import Menu from './Menu';
 import "./App.css";
 
-class App extends Component {
-  state = {
+function App() {
+  // TODO: Hooks
+  const state = {
     lat: 58.380745,
     lng: 26.725872,
     zoom: 15,
@@ -29,39 +21,12 @@ class App extends Component {
       description: "",
       rating: "",
     },
-    // markers: []
-  };
-
-  markers = localStorage.getItem("markers")
+    markers: localStorage.getItem("markers")
     ? JSON.parse(localStorage.getItem("markers"))
     : []
-
-  // componentDidMount() {
-  //   fetch('http://localhost:5000/api/v1/markers/')
-  //     .then(response => response.json())
-  //     .then(data => this.setState({
-  //       lat: 58.380745,
-  //       lng: 26.725872,
-  //       zoom: 15,
-  //       newMarkerOpacity: 0.0,
-  //       activeLocation: {
-  //         title: "Tartu Coffee",
-  //         description: "",
-  //         rating: "",
-  //       },
-  //       addingNewPlace: false,
-  //       newLocation: {
-  //         title: "",
-  //         description: "",
-  //         rating: "",
-  //       },
-  //       markers: data
-  //     }));
-  // }
-
-  // TODO: Add a second page with a list view of all the markers!
-
-  newMarkerCreation = (e) => {
+  };
+  
+  const newMarkerCreation = (e) => {
     this.setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
@@ -82,7 +47,7 @@ class App extends Component {
     }));
   };
 
-  locationSelected = (e, marker) => {
+  const locationSelected = (e, marker) => {
     this.setState((prevState) => ({
       lat: e.latlng.lat,
       lng: e.latlng.lng,
@@ -103,210 +68,38 @@ class App extends Component {
     }));
   };
 
-  formSubmitted = (e) => {
-    e.preventDefault();
+  const position = [state.lat, state.lng];
 
-    const newLoc = this.state.newLocation;
-    newLoc.position = [this.state.lat, this.state.lng];
-    this.markers.push(newLoc);
-    localStorage.setItem("markers", JSON.stringify(this.markers));
-
-    this.setState((prevState) => ({
-      lat: prevState.lat,
-      lng: prevState.lng,
-      zoom: 18,
-      newMarkerOpacity: 0.0,
-      activeLocation: this.state.newLocation,
-      addingNewPlace: false,
-      newLocation: {
-        title: "",
-        description: "",
-        rating: "",
-      },
-      markers: prevState.markers
-    }));
-  };
-
-  valueChanged = (e) => {
-    const { name, value } = e.target;
-    this.setState((prevState) => ({
-      lat: prevState.lat,
-      lng: prevState.lng,
-      zoom: 18,
-      newMarkerOpacity: prevState.newMarkerOpacity,
-      activeLocation: prevState.activeLocation,
-      addingNewPlace: true,
-      newLocation: {
-        ...prevState.newLocation,
-        [name]: value,
-      },
-      markers: prevState.markers
-    }));
-  };
-
-  render() {
-    const position = [this.state.lat, this.state.lng];
-
-    return (
-      <div>
-        <Map
-          center={position}
-          zoom={this.state.zoom}
-          className="map"
-          onClick={this.newMarkerCreation}
-          doubleClickZoom={false}
-        >
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {/* {this.state.markers.map((marker) => ( */}
-          {this.markers.map((marker) => (
-            <Marker
-              // position={[marker.latitude, marker.longitude]}
-              // key={marker.latitude + marker.longitude}
-              position={marker.position}
-              key={marker.position[0] + marker.position[1]}
-              onClick={(e) => this.locationSelected(e, marker)}
-            ></Marker>
-          ))}
+  return (
+    <div>
+      <Map
+        center={position}
+        zoom={state.zoom}
+        className="map"
+        onClick={newMarkerCreation}
+        doubleClickZoom={false}
+      >
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {state.markers.map((marker) => (
           <Marker
-            position={position}
-            key={position[0] + position[1]}
-            opacity={this.state.newMarkerOpacity}
-            className="activeMarker"
+            position={marker.position}
+            key={marker.position[0] + marker.position[1]}
+            onClick={(e) => locationSelected(e, marker)}
           ></Marker>
-        </Map>
-        <Card body className="messageCard shadow">
-          <CardTitle>
-            <h4>
-              <span
-                role="img"
-                aria-label="coffee"
-                style={{ display: "inline-block" }}
-              >
-                ☕
-              </span>{" "}
-              {this.state.addingNewPlace ? (
-                <Input
-                  onChange={this.valueChanged}
-                  type="text"
-                  name="title"
-                  id="titleInput"
-                  placeholder="New Coffee Place"
-                />
-              ) : (
-                  this.state.activeLocation.title
-                )}
-            </h4>
-            <hr />
-          </CardTitle>
-          <CardBody className="card-inner">
-            {this.state.addingNewPlace ? (
-              <div>
-                <Form onSubmit={this.formSubmitted}>
-                  <FormGroup>
-                    <Label for="ratingInput">Rating</Label>
-                    <Input
-                      onChange={this.valueChanged}
-                      type="text"
-                      name="rating"
-                      id="ratingInput"
-                      placeholder="0% - 100%"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="descriptionInput">Description</Label>
-                    <Input
-                      onChange={this.valueChanged}
-                      type="textarea"
-                      name="description"
-                      id="descriptionInput"
-                      placeholder="Really great lattes!"
-                    />
-                  </FormGroup>
-                  <Button
-                    type="submit"
-                    disabled={
-                      !this.state.newLocation.title ||
-                      !this.state.newLocation.rating ||
-                      !this.state.newLocation.description
-                    }
-                  >
-                    Submit
-                  </Button>
-                </Form>
-              </div>
-            ) : this.state.activeLocation.rating ? (
-              <>
-                <div className="star-ratings-sprite">
-                  <span
-                    style={{ width: this.state.activeLocation.rating }}
-                    className="star-ratings-sprite-rating"
-                  ></span>
-                </div>
-                <span>{this.state.activeLocation.description}</span>
-              </>
-            ) : (
-                  <>
-                    <span>Favorite coffee places in Tartu.</span>
-                    <br />
-                    <Button
-                      type="button"
-                      outline
-                      size="sm"
-                      className="mt-3 mr-2 mb-2"
-                      onClick={() => {
-                        const insertedRawUnsanitizedTotallySafeList = prompt(
-                          "Insert list of locations (stringified JSON):"
-                        );
-
-                        if (insertedRawUnsanitizedTotallySafeList === null) {
-                          return;
-                        }
-
-                        localStorage.setItem(
-                          "markers",
-                          insertedRawUnsanitizedTotallySafeList
-                        );
-                        window.location.replace("/");
-                      }}
-                    >
-                      Load List
-                </Button>
-                    <Button
-                      type="button"
-                      outline
-                      size="sm"
-                      className="mt-3 mb-2"
-                      color="danger"
-                      onClick={() => {
-                        localStorage.clear();
-                        window.location.replace("/");
-                      }}
-                    >
-                      Delete All
-                </Button>
-                    <br />
-                    <span className="text-muted small" style={{ opacity: "0.6" }}>
-                      Created by{" "}
-                      <a
-                        className="text-muted"
-                        style={{ textDecoration: "underline" }}
-                        href="https://github.com/tonysln"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Anton
-                  </a>
-                    </span>
-                  </>
-                )}
-          </CardBody>
-        </Card>
-      </div>
-    );
-  }
+        ))}
+        <Marker
+          position={position}
+          key={position[0] + position[1]}
+          opacity={state.newMarkerOpacity}
+          className="activeMarker"
+        ></Marker>
+      </Map>
+      <Menu state={state} />
+    </div>
+  );
 }
 
 export default App;
