@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Map, TileLayer, Marker } from "react-leaflet";
 import Menu from './Menu';
+import Places from './Places';
 import "./App.css";
 
 function App() {
@@ -98,6 +99,7 @@ function App() {
         ></Marker>
       </Map>
       <Menu state={state} setState={setState} />
+      <Places state={state} />
     </div>
   );
 }

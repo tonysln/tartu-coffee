@@ -18,6 +18,9 @@ function Menu({ state, setState }) {
     
         const newLoc = state.newLocation;
         newLoc.position = [state.lat, state.lng];
+
+        // Check for % sign in rating
+
         state.markers.push(newLoc);
         localStorage.setItem("markers", JSON.stringify(state.markers));
     
@@ -35,6 +38,27 @@ function Menu({ state, setState }) {
           },
           markers: prevState.markers
         }));
+    };
+
+    const backToMap = () => {
+        setState((prevState) => ({
+            lat: prevState.lat,
+            lng: prevState.lng,
+            zoom: 16,
+            newMarkerOpacity: 0.0,
+            activeLocation: {
+                title: "Tartu Coffee",
+                description: "",
+                rating: "",
+            },
+            addingNewPlace: false,
+            newLocation: {
+              title: "",
+              description: "",
+              rating: "",
+            },
+            markers: prevState.markers
+          }));
     };
     
     const valueChanged = (e) => {
@@ -118,13 +142,23 @@ function Menu({ state, setState }) {
               </div>
             ) : state.activeLocation.rating ? (
               <>
-                <div className="star-ratings-sprite">
+                <div className="star-ratings-container">
                   <span
                     style={{ width: state.activeLocation.rating }}
-                    className="star-ratings-sprite-rating"
+                    className="star-rating"
                   ></span>
                 </div>
                 <span>{state.activeLocation.description}</span>
+                <br />
+                <Button
+                      type="button"
+                      outline
+                      size="sm"
+                      onClick={backToMap}
+                      style={{ float: "right" }}
+                    >
+                    Back
+                </Button>
               </>
             ) : (
                   <>
