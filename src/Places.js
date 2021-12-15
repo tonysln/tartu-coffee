@@ -14,18 +14,20 @@ function Places({ state }) {
             <h4>
                 📍 My Places
             </h4>
-            <hr />
            </CardTitle>
-          <CardBody className="card-inner">
-            {state.markers.map((marker) => (
-            <p
-            key={marker.position[0] + marker.position[1]}
-            >
-             {marker.title}
-             <br />
-             <small>{marker.description}</small>
-            </p>
-            ))}
+          <CardBody className="card-inner list-group">
+            <ul className="list-group list-group-flush">
+              {state.markers.map((marker) => (
+              <li
+              className="list-group-item"
+              key={marker.position[0] + marker.position[1]}
+              >
+              <strong>{marker.title}</strong>
+              <br />
+              <small>{marker.description}</small>
+              </li>
+              ))}
+            </ul>
           </CardBody>
         </Card>
     );
